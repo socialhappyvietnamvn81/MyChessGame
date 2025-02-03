@@ -13,9 +13,9 @@
         }
         #board {
             width: 400px;
-            height: 400px; /* Đảm bảo bàn cờ có chiều cao */
-            margin: 20px auto;
-            border: 2px solid #000; /* Thêm viền cho bàn cờ */
+            height: 400px;
+            margin: auto;
+            border: 2px solid #000;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
         button {
@@ -23,7 +23,7 @@
             margin-top: 10px;
             cursor: pointer;
             background-color: #007bff;
-            color: #fff;
+            color: white;
             border: none;
             border-radius: 5px;
         }
@@ -39,22 +39,26 @@
     <button onclick="resetGame()">Chơi lại</button>
     
     <script>
+        // Khởi tạo game
         var board, game = new Chess();
 
+        // Kiểm tra nước đi hợp lệ
         function onDragStart(source, piece) {
-            if (game.game_over()) return false; // Không thể đi nếu ván cờ kết thúc
+            if (game.game_over()) return false; // Nếu game kết thúc, không cho đi
             if ((game.turn() === 'w' && piece.search(/^b/) !== -1) || 
                 (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-                return false; // Chỉ đi được quân của mình
+                return false; // Chỉ được đi quân của mình
             }
         }
 
+        // Thực hiện nước đi
         function onDrop(source, target) {
-            var move = game.move({ from: source, to: target, promotion: 'q' });
-            if (move === null) return 'snapback';
-            updateStatus();
+            var move = game.move({ from: source, to: target, promotion: 'q' }); // Xử lý phong hậu
+            if (move === null) return 'snapback'; // Nếu nước đi không hợp lệ
+            updateStatus(); // Cập nhật trạng thái
         }
 
+        // Cập nhật trạng thái game
         function updateStatus() {
             var status = 'Lượt đi: ' + (game.turn() === 'w' ? 'Trắng' : 'Đen');
             if (game.in_checkmate()) {
@@ -65,17 +69,22 @@
             document.getElementById('status').innerText = status;
         }
 
+        // Khởi động lại game
         function resetGame() {
             game.reset();
             board.position('start');
             updateStatus();
         }
 
-        board = Chessboard('board', {
-            draggable: true,
-            position: 'start',
-            onDragStart: onDragStart,
-            onDrop: onDrop
+        // Hiển thị bàn cờ
+        document.addEventListener('DOMContentLoaded', function () {
+            board = Chessboard('board', {
+                draggable: true,
+                position: 'start',
+                onDragStart: onDragStart,
+                onDrop: onDrop
+            });
+            updateStatus();
         });
     </script>
 </body>
