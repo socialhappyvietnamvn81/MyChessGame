@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Chess Game</title>
     <script src="https://cdn.jsdelivr.net/npm/chessboardjs@1.0.0/dist/chessboard.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
@@ -15,10 +13,10 @@
         }
         #board {
             width: 400px;
-            margin: auto;
-            padding: 10px;
-            border: 1px solid #ccc;
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+            height: 400px; /* Đảm bảo bàn cờ có chiều cao */
+            margin: 20px auto;
+            border: 2px solid #000; /* Thêm viền cho bàn cờ */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
         button {
             padding: 10px 20px;
@@ -39,47 +37,45 @@
     <div id="board"></div>
     <p id="status">Lượt đi: Trắng</p>
     <button onclick="resetGame()">Chơi lại</button>
-
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var board, game = new Chess();
+        var board, game = new Chess();
 
-            function onDragStart(source, piece) {
-                if (game.game_over()) return false; // Không thể đi nếu ván cờ kết thúc
-                if ((game.turn() === 'w' && piece.search(/^b/) !== -1) || 
-                    (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-                    return false; // Chỉ đi được quân của mình
-                }
+        function onDragStart(source, piece) {
+            if (game.game_over()) return false; // Không thể đi nếu ván cờ kết thúc
+            if ((game.turn() === 'w' && piece.search(/^b/) !== -1) || 
+                (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+                return false; // Chỉ đi được quân của mình
             }
+        }
 
-            function onDrop(source, target) {
-                var move = game.move({ from: source, to: target, promotion: 'q' });
-                if (move === null) return 'snapback';
-                updateStatus();
+        function onDrop(source, target) {
+            var move = game.move({ from: source, to: target, promotion: 'q' });
+            if (move === null) return 'snapback';
+            updateStatus();
+        }
+
+        function updateStatus() {
+            var status = 'Lượt đi: ' + (game.turn() === 'w' ? 'Trắng' : 'Đen');
+            if (game.in_checkmate()) {
+                status = 'Chiếu hết! ' + (game.turn() === 'w' ? 'Đen' : 'Trắng') + ' thắng!';
+            } else if (game.in_draw()) {
+                status = 'Ván đấu hòa!';
             }
+            document.getElementById('status').innerText = status;
+        }
 
-            function updateStatus() {
-                var status = 'Lượt đi: ' + (game.turn() === 'w' ? 'Trắng' : 'Đen');
-                if (game.in_checkmate()) {
-                    status = 'Chiếu hết! ' + (game.turn() === 'w' ? 'Đen' : 'Trắng') + ' thắng!';
-                } else if (game.in_draw()) {
-                    status = 'Ván đấu hòa!';
-                }
-                document.getElementById('status').innerText = status;
-            }
+        function resetGame() {
+            game.reset();
+            board.position('start');
+            updateStatus();
+        }
 
-            function resetGame() {
-                game.reset();
-                board.position('start');
-                updateStatus();
-            }
-
-            board = Chessboard('board', {
-                draggable: true,
-                position: 'start',
-                onDragStart: onDragStart,
-                onDrop: onDrop
-            });
+        board = Chessboard('board', {
+            draggable: true,
+            position: 'start',
+            onDragStart: onDragStart,
+            onDrop: onDrop
         });
     </script>
 </body>
