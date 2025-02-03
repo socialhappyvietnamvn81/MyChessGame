@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Cờ Vua</title>
+    <link rel="stylesheet" href="css/chessboard-1.0.0.min.css">
+    <script src="js/chessboard-1.0.0.min.js"></script>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        #board {
+            width: 500px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Game Cờ Vua - Bước 1</h1>
+    <div id="board"></div>
+
+    <script>
+        var board = Chessboard('board', {
+            position: 'start', // Hiển thị bàn cờ từ vị trí ban đầu
+            draggable: true,   // Cho phép kéo thả quân cờ
+        });
+    </script>
+
+</body>
+</html>
