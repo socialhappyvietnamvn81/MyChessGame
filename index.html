@@ -15,6 +15,7 @@
     }
     #board {
       width: 500px;
+      height: 500px; /* Thêm chiều cao để chắc chắn bàn cờ hiển thị */
       margin: 20px auto;
     }
   </style>
@@ -24,8 +25,8 @@
   <div id="board"></div>
   <script>
     var board = Chessboard('board', {
-      position: 'start',
-      draggable: true
+      position: 'start', // Hiển thị trạng thái ban đầu của bàn cờ
+      draggable: true    // Cho phép kéo thả quân cờ
     });
   </script>
 </body>
